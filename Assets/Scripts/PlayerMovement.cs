@@ -8,32 +8,43 @@ public class PlayerMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
 
-    public float gravity = -9.81f;
-    public float jumpHeight = 2f;
+    
+    public float gravity = -15f;
+    public float jumpHeight = 2.5f;
     private Vector3 velocity;
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
     private bool isGrounded;
 
+    
+    private int jumpCount = 0;
+    public int maxJumps = 2; 
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
-        
+        if (controller == null)
+        {
+            Debug.LogError("CharacterController is missing on Player!");
+        }
     }
 
     void Update()
     {
-        Debug.Log("IsGrounded: " + isGrounded);
-
+        if (controller == null) return;
 
         
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0)
+        if (isGrounded)
         {
-            velocity.y = -2f; 
+            jumpCount = 0; 
+            if (velocity.y < 0)
+            {
+                velocity.y = -2f; 
+            }
         }
 
         
@@ -51,10 +62,11 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
-       
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        
+        if (Input.GetButtonDown("Jump") && jumpCount < maxJumps)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            jumpCount++; 
         }
 
         
