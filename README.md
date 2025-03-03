@@ -1,7 +1,5 @@
 # ThirdPersonPlatformer
 
-## Demo video 
-
 
 ## [Demo Video](https://youtu.be/OIpps1c5PQI)
 
